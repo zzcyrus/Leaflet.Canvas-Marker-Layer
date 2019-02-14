@@ -3,11 +3,11 @@ A custom canvas marker layer, based on [Leaflet.Canvas-Markers](https://github.c
 
 # Demo
 
-[Icons-Markers](https://zzcyrus.github.io/Leaflet.Canvas-Marker-Layer/examples/icons.html)
+[Icons-Markers](https://zzcyrus.github.io/Leaflet.Canvas-Marker-Layer/example/icons.html)
 
-[Custom-canvas-circle-Markers](https://zzcyrus.github.io/Leaflet.Canvas-Marker-Layer/examples/circle.html)
+[Custom-canvas-circle-Markers](https://zzcyrus.github.io/Leaflet.Canvas-Marker-Layer/example/circle.html)
 
-[Custom-canvas-text-Markers](https://zzcyrus.github.io/Leaflet.Canvas-Marker-Layer/examples/text.html)
+[Custom-canvas-text-Markers](https://zzcyrus.github.io/Leaflet.Canvas-Marker-Layer/example/text.html)
 
 
 # Basic usage and api
