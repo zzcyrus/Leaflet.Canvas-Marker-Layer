@@ -1,0 +1,55 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8"></meta>
+  <title>index</title>
+  <link rel="stylesheet" href="static/lib/leaflet.css" />
+  <script src="static/lib/leaflet-src.js"></script>
+  <script src="Leaflet.Canvas-Marker-layer.js"></script>
+
+</head>
+
+<body>
+    <div id='map' style="width: 100%;height: 100%;"></div>
+
+    <script>
+
+      const map = L.map('map').setView([59.9578,30.2987], 10);
+    
+      const tiles = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+      	attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+     		preferCanvas: true
+    	}).addTo(map);
+      
+
+      const ciLayer = L.canvasMarkerLayer({
+        userDrawFunc: function(layer, marker, pointPos, size){
+          const ctx = layer._context;
+          const number = marker.properties.number;
+          ctx.beginPath();
+          ctx.fillStyle = 'rgba(255,0,0,0.8)';
+          ctx.fillRect(pointPos.x-size[0]/2, pointPos.y-size[1]/2, size[0], size[1]);
+          ctx.font = '12px Helvetica Neue';
+          ctx.fillStyle = '#000';
+          ctx.fillText(number, pointPos.x, pointPos.y+size[1]/4);
+          ctx.textAlign='center';
+          ctx.closePath();
+        }
+      }).addTo(map);
+      ciLayer.addOnClickListener(function (e,data) {console.log(data)});
+      ciLayer.addOnHoverListener(function (e,data) {console.log(data[0].data._leaflet_id)});
+      const markers = [];
+      for (let i = 0; i < 10000; i++) {
+        let marker = L.marker([58.5578 + Math.random()*1.8, 29.0087 + Math.random()*3.6], 
+        {
+          icon: L.icon({
+            iconSize: [40, 20]
+          })
+        }).bindPopup("I Am "+i);
+        marker.properties = { number: i };
+        markers.push(marker);
+      }
+      ciLayer.addLayers(markers);
+
+    </script>
+</body>
+</html>

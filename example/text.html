@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Leaflet.canvas-text</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js"></script>
+  <style>
+    body{
+      font-family: Arial, Helvetica, sans-serif;
+    }
+    .container{
+      margin: 0 auto;
+      max-width: 1200px;
+    }
+    .map{
+      width: 100%;
+      height: 600px;
+    }
+    .header{
+      padding-top: 50px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Leaflet.canvas-text</h1>
+      <p>Leaflet plugin for displaying markers on canvas instead of DOM.</p>
+    </div>
+    <div class="map" id="map"></div>
+  </div>
+  <script src="../dist/Leaflet.Canvas-Marker-layer.js"></script>
+  <script>
+    const map = L.map('map').setView([59.9578,30.2987], 10);
+    const tiles = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+      preferCanvas: true
+    }).addTo(map);
+    const ciLayer = L.canvasMarkerLayer({
+      userDrawFunc: function(layer, marker, pointPos, size){
+        const ctx = layer._context;
+        const number = marker.properties.number;
+        ctx.beginPath();
+        ctx.fillStyle = 'rgba(255,0,0,0.8)';
+        ctx.fillRect(pointPos.x-size[0]/2, pointPos.y-size[1]/2, size[0], size[1] );
+        ctx.font = '12px Helvetica Neue';
+        ctx.fillStyle = '#000';
+        ctx.fillText(number, pointPos.x, pointPos.y+size[1]/4);
+        ctx.textAlign='center';
+        ctx.closePath();
+      }
+    }).addTo(map);
+    ciLayer.addOnClickListener(function (e,data) {console.log(data)});
+    ciLayer.addOnHoverListener(function (e,data) {console.log(data[0].data._leaflet_id)});
+    const markers = [];
+    for (let i = 0; i < 10000; i++) {
+      let marker = L.marker([58.5578 + Math.random()*1.8, 29.0087 + Math.random()*3.6], 
+        {
+          icon: L.icon({
+            iconSize: [40, 20]
+          })
+        }).bindPopup("I Am "+i);
+      marker.properties = { number: i };
+      markers.push(marker);
+    }
+    ciLayer.addLayers(markers);
+  </script>
+</body>
+</html>

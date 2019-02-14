@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Leaflet.canvas-circle</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js"></script>
+  <style>
+    body{
+      font-family: Arial, Helvetica, sans-serif;
+    }
+    .container{
+      margin: 0 auto;
+      max-width: 1200px;
+    }
+    .map{
+      width: 100%;
+      height: 600px;
+    }
+    .header{
+      padding-top: 50px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Leaflet.canvas-circle</h1>
+      <p>Leaflet plugin for displaying markers on canvas instead of DOM.</p>
+    </div>
+    <div class="map" id="map"></div>
+  </div>
+  <script src="../dist/Leaflet.Canvas-Marker-layer.js"></script>
+  <script>
+    const map = L.map('map').setView([59.9578,30.2987], 10);
+    const tiles = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+      preferCanvas: true
+    }).addTo(map);
+    const ciLayer = L.canvasMarkerLayer({
+      userDrawFunc: function(layer, marker, pointPos, size){
+        const ctx = layer._context;
+        ctx.beginPath();
+        ctx.arc(pointPos.x, pointPos.y, size[0]/2, 0, 2*Math.PI);
+        ctx.fillStyle = 'rgba(255,12,0,0.4)';
+        ctx.fill();
+        ctx.closePath();
+      }
+    }).addTo(map);
+    ciLayer.addOnClickListener(function (e,data) {console.log(data)});
+    ciLayer.addOnHoverListener(function (e,data) {console.log(data[0].data._leaflet_id)});
+    const markers = [];
+    for (let i = 0; i < 10000; i++) {
+      const marker = L.marker([58.5578 + Math.random()*1.8, 29.0087 + Math.random()*3.6], 
+        {
+          icon: L.icon({
+            iconSize: [20, 20]
+          })
+        }).bindPopup("I Am "+i);
+      markers.push(marker);
+    }
+    ciLayer.addLayers(markers);
+  </script>
+</body>
+</html>
